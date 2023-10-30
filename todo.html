@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    form{
+        display: flex;
+        align-items:center ;
+        justify-content: center;
+        gap: 10px;
+    }
+    div{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+   
+</style>
+<body>
+    <form action="">
+        <input type="text" id="txt" placeholder="enter value...">
+        <button id="Save">Save</button>
+        <button id="Add">Add</button>
+        <button id="delete">Delete</button>
+    </form>
+    <div>
+<ul class="list"></ul>
+</div>
+    <script>
+    const txt = document.getElementById("txt")
+    const form = document.querySelector("form")
+    const ul = document.querySelector(".list")
+    const btn=document.getElementById('Add')
+    const btnsave=document.getElementById('Save')
+    const todoArrLocalStorage = getLocalStorage("data")
+    let index=0;
+    btnsave.style.display='none'
+    let todoArr = []
+    if (todoArrLocalStorage) {
+            todoArr = todoArrLocalStorage
+            todoArr.forEach(element => {
+                const li = document.createElement("li")
+         const span = document.createElement("span")
+            const edit = document.createElement("input")
+            const dlt=document.getElementById('delete')
+                  span.textContent = element.value
+            edit.setAttribute("type", "button")
+            li.setAttribute('id',element.id)
+            edit.value='Edit'
+            dlt.onclick = () => {
+                localStorage.removeItem('data')
+        } 
+        edit.onclick=()=>{
+            btnsave.style.display='block'
+            btn.style.display='none'
+            txt.value=span.textContent
+            btnsave.onclick=(e)=>{
+                e.preventDefault()
+            if (txt.value !== span.textContent) {
+                span.textContent=txt.value
+                btnsave.style.display='none'
+            btn.style.display='block'
+            }
+        }
+        }
+        li.append(span, edit)
+        ul.append(li)});
+        }
+        btn.addEventListener('click',(e)=>{
+            e.preventDefault()
+            todoArr.push({ id: index,value: txt.value})
+            setLocalStorage("data", todoArr)
+            addTodo(index,txt.value)
+            index++
+        })
+        function addTodo(index,val) {
+                 const li = document.createElement("li")
+         const span = document.createElement("span")
+            const edit = document.createElement("input")
+            const dlt=document.getElementById('delete')
+                  span.textContent = val
+            edit.setAttribute("type", "button")
+            li.setAttribute('id',index)
+            index++
+            edit.value='Edit'
+            dlt.onclick = () => {
+                localStorage.removeItem('data')
+        } 
+        edit.onclick=()=>{
+            btnsave.style.display='block'
+            btn.style.display='none'
+            txt.value=span.textContent
+            btnsave.onclick=(e)=>{
+                e.preventDefault()
+              const getAttributess=  li.getAttribute('id')
+console.log(getAttributess);
+todoArr[getAttributess].value=txt.value
+setLocalStorage("data", todoArr)
+            if (txt.value !== span.textContent) {
+                span.textContent=txt.value
+                btnsave.style.display='none'
+            btn.style.display='block'
+            }
+        }
+        }
+        li.append(span, edit)
+        ul.append(li)
+    }
+        function setLocalStorage(key, data) {
+            localStorage.setItem(key, JSON.stringify(data))
+        }
+        function getLocalStorage(key) {
+            return JSON.parse(localStorage.getItem(key))
+        }
+    </script>
+</body>
+</html>
